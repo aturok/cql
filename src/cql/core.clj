@@ -17,13 +17,17 @@
 ;Setup a routine, which transforms the on condition list into a boolean function
 ;callable like this (condition :a.a = :b.a and (:a.c = :b.c or :a.d = b.d))
 
+(defmacro condo
+	([t complex]
+		`(condo ~t ~@complex))
+	([t k1 op k2]
+	`(~op (~k1 ~t) (~k2 ~t)))
+	([t k1 op1 k2 link & other]
+	`(~link
+		(condo ~t ~k1 ~op1 ~k2)
+		(condo ~t ~@other))))
+
 (defmacro condition 
-	([complex]
-		`(fn [t#] ((condition ~@complex) t#)))
-	([k1 op k2]
-	`(fn [t#] (~op (~k1 t#) (~k2 t#))))
-	([k1 op1 k2 link & other]
-	`(fn [t#] 
-		(~link
-			((condition ~k1 ~op1 ~k2) t#)
-			((condition ~@other) t#)))))
+	[& conditions]
+	`(fn [t#]
+		(condo t# ~@conditions)))
