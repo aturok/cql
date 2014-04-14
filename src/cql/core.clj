@@ -18,10 +18,12 @@
 ;callable like this (condition :a.a = :b.a and (:a.c = :b.c or :a.d = b.d))
 
 (defmacro condition 
+	([complex]
+		`(fn [t#] ((condition ~@complex) t#)))
 	([k1 op k2]
 	`(fn [t#] (~op (~k1 t#) (~k2 t#))))
-	([k1 op1 k2 link k3 op2 k4]
+	([k1 op1 k2 link & other]
 	`(fn [t#] 
 		(~link
 			((condition ~k1 ~op1 ~k2) t#)
-			((condition ~k3 ~op2 ~k4) t#)))))
+			((condition ~@other) t#)))))
