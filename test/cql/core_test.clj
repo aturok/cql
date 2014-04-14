@@ -34,4 +34,14 @@
     	(is (= false
     			(complex {:a 1 :b 1 :c 2 :d 3})))
     	(is (= false
-    			(complex {:a 1 :b 0 :c 0 :d 0}))))))
+    			(complex {:a 1 :b 0 :c 0 :d 0})))))
+  (testing "handles condition with prioritization (inversed)"
+    (let [complex (condition (:c = :d or :b = :c) and :a = :b)]
+        (is (= true
+                (complex {:a 1 :b 1 :c 2 :d 2})))
+        (is (= true
+                (complex {:a 1 :b 1 :c 1 :d 0})))
+        (is (= false
+                (complex {:a 1 :b 1 :c 2 :d 3})))
+        (is (= false
+                (complex {:a 1 :b 0 :c 0 :d 0}))))))

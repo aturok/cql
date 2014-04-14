@@ -21,11 +21,19 @@
 	([t complex]
 		`(condo ~t ~@complex))
 	([t k1 op k2]
-	`(~op (~k1 ~t) (~k2 ~t)))
+		(if (seq? k1)
+			`(~op
+				(condo ~t ~k1)
+				(condo ~t ~k2))
+			`(~op (~k1 ~t) (~k2 ~t))))
 	([t k1 op1 k2 link & other]
-	`(~link
-		(condo ~t ~k1 ~op1 ~k2)
-		(condo ~t ~@other))))
+		(if (seq? k1)
+			`(~op1
+				(condo ~t ~k1)
+				(condo ~t ~k2 ~link ~@other))
+			`(~link
+				(condo ~t ~k1 ~op1 ~k2)
+				(condo ~t ~@other)))))
 
 (defmacro condition 
 	[& conditions]
