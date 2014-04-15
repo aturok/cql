@@ -66,4 +66,16 @@
         (is (= false
                 (complex {:a 1 :b 1 :c 2 :d 3})))
         (is (= false
-                (complex {:a 1 :b 0 :c 0 :d 0}))))))
+                (complex {:a 1 :b 0 :c 0 :d 0})))))
+  (testing "handles long and/or correctly"
+    (let [long (condition :c = :d or :b = :c and :a = :b or :a = :c)]
+        (is (= true
+                (long {:a 1 :b 1 :c 2 :d 2})))
+        (is (= true
+                (long {:a 1 :b 1 :c 1 :d 0})))
+        (is (= true
+                (long {:a 2 :b 2 :c 2 :d 4})))
+        (is (= false
+                (long {:a 1 :b 2 :c 3 :d 4})))
+        (is (= false
+                (long {:a 1 :b 2 :c 3 :d 1}))))))
