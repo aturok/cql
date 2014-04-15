@@ -79,3 +79,8 @@
                 (long {:a 1 :b 2 :c 3 :d 4})))
         (is (= false
                 (long {:a 1 :b 2 :c 3 :d 1}))))))
+
+(deftest extend-keys-test
+    (testing "extends dict keys with dict name"
+        (is (= {:t.a 1 :t.b 2}
+               (extend-keys :t {:a 1 :b 2})))))

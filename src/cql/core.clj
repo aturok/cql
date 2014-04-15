@@ -39,3 +39,13 @@
 	[& conditions]
 	`(fn [t#]
 		(condo t# ~@conditions)))
+
+(defn keystr [k]
+	(subs (str k) 1))
+
+(defn combine-key [left right]
+	(keyword
+		(str (keystr left) "." (keystr right))))
+
+(defn extend-keys [tablename table]
+	(into {} (map (fn [[k v]] [(combine-key tablename k) v]) table)))
