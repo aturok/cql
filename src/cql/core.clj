@@ -59,3 +59,6 @@
 		   		(if (condo combined# ~@conditions)
 		   			combined#
 		   			nil)))))
+
+(defmacro select [what from table]
+	`(map (partial extend-keys (keyword '~table)) ~table))

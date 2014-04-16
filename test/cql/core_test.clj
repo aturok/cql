@@ -98,3 +98,9 @@
             (is (= [{:a.k1 1 :a.k2 101 :b.k2 1 :b.k1 201}
                     {:a.k1 3 :a.k2 103 :b.k2 3 :b.k1 203}]
                     (inner-join a b on :a.k1 = :b.k2))))))
+
+(deftest select-test
+    (testing "selects everything with star and without wheres/joins"
+        (let [table [{:k1 1 :k2 3} {:k1 2 :k2 2} {:k1 3 :k2 2}]]
+            (is (= (map (partial extend-keys :table) table)
+                   (select * from table))))))
