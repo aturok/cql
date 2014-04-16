@@ -84,3 +84,17 @@
     (testing "extends dict keys with dict name"
         (is (= {:t.a 1 :t.b 2}
                (extend-keys :t {:a 1 :b 2})))))
+
+(deftest join-test
+    (testing "simple condition with simple dicts"
+        (let [a [{:k1 1} {:k1 2} {:k1 3}]
+              b [{:k2 4} {:k2 1} {:k2 3}]]
+            (is (= [{:a.k1 1 :b.k2 1}
+                    {:a.k1 3 :b.k2 3}]
+                    (inner-join a b on :a.k1 = :b.k2)))))
+    (testing "treats similar keys properly"
+        (let [a [{:k1 1 :k2 101} {:k1 2 :k2 102} {:k1 3 :k2 103}]
+              b [{:k1 204 :k2 4} {:k1 201 :k2 1} {:k1 203 :k2 3}]]
+            (is (= [{:a.k1 1 :a.k2 101 :b.k2 1 :b.k1 201}
+                    {:a.k1 3 :a.k2 103 :b.k2 3 :b.k1 203}]
+                    (inner-join a b on :a.k1 = :b.k2))))))

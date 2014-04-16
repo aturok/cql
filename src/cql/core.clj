@@ -49,3 +49,13 @@
 
 (defn extend-keys [tablename table]
 	(into {} (map (fn [[k v]] [(combine-key tablename k) v]) table)))
+
+
+(defmacro inner-join [table1 table2 _ & conditions]
+	`(filter identity
+		(for [r1# (map (partial extend-keys (keyword '~table1)) ~table1)
+		      r2# (map (partial extend-keys (keyword '~table2)) ~table2)]
+		   (let [combined# (into r1# r2#)]
+		   		(if (condo combined# ~@conditions)
+		   			combined#
+		   			nil)))))
