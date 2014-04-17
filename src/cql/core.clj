@@ -60,5 +60,16 @@
 		   			combined#
 		   			nil)))))
 
-(defmacro select [what from table]
-	`(map (partial extend-keys (keyword '~table)) ~table))
+(defmacro selector [f & stuff]
+	(if (= f '*)
+		identity
+		(let [otherkeys (take-while keyword? stuff)
+			  ks (apply vector (conj otherkeys f))]
+			  `(fn [r#]
+					(into {} (map (fn [k#] [k# (k# r#)]) ~ks))))))
+
+(defmacro select
+	([what from table]
+	`(let [result# (map (partial extend-keys (keyword '~table)) ~table)
+		   selector# (selector ~what)]
+		(map selector# result#))))

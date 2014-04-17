@@ -103,4 +103,10 @@
     (testing "selects everything with star and without wheres/joins"
         (let [table [{:k1 1 :k2 3} {:k1 2 :k2 2} {:k1 3 :k2 2}]]
             (is (= (map (partial extend-keys :table) table)
-                   (select * from table))))))
+                   (select * from table)))))
+    (testing "selects only specified keys"
+        (let [table [{:k1 1 :k2 3 :k3 300}
+                     {:k1 2 :k2 2 :k3 600}
+                     {:k1 3 :k2 2 :k3 900}]]
+            (is (= [{:table.k1 1} {:table.k1 2} {:table.k1 3}]
+                   (select :table.k1 from table))))))
