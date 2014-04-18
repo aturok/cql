@@ -18,6 +18,8 @@
 ;callable like this (condition :a.a = :b.a and (:a.c = :b.c or :a.d = b.d))
 
 (defmacro condo
+	([t]
+		`true)
 	([t complex]
 		`(condo ~t ~@complex))
 	([t k1 op k2]

@@ -78,7 +78,15 @@
         (is (= false
                 (long {:a 1 :b 2 :c 3 :d 4})))
         (is (= false
-                (long {:a 1 :b 2 :c 3 :d 1}))))))
+                (long {:a 1 :b 2 :c 3 :d 1})))))
+  (testing "creates always true condition for no args"
+    (let [truth (condition)]
+        (is (= true
+                (truth {})))
+        (is (= true
+                (truth {:a 1 :b 1})))
+        (is (= true
+                (truth {:a 2 :b 2 :c 2 :d 4}))))))
 
 (deftest extend-keys-test
     (testing "extends dict keys with dict name"
