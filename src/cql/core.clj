@@ -68,8 +68,9 @@
 			  `(fn [r#]
 					(into {} (map (fn [k#] [k# (k# r#)]) ~ks))))))
 
-(defmacro select
-	([what from table]
-	`(let [result# (map (partial extend-keys (keyword '~table)) ~table)
-		   selector# (selector ~what)]
-		(map selector# result#))))
+(defmacro select [& what]
+	(let [source (next (drop-while #(not= 'from %) what))
+		  table (first source)]
+	`(let [sel# (selector ~@what)
+		   result# (map (partial extend-keys (keyword '~table)) ~table)]
+		(map sel# result#))))

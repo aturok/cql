@@ -109,4 +109,10 @@
                      {:k1 2 :k2 2 :k3 600}
                      {:k1 3 :k2 2 :k3 900}]]
             (is (= [{:table.k1 1} {:table.k1 2} {:table.k1 3}]
-                   (select :table.k1 from table))))))
+                   (select :table.k1 from table)))
+            (is (= [{:table.k1 1 :table.k3 300}
+                    {:table.k1 2 :table.k3 600}
+                    {:table.k1 3 :table.k3 900}]
+                   (select :table.k1 :table.k3 from table)))
+            (is (= (map (partial extend-keys :table) table)
+                   (select :table.k1 :table.k3 :table.k2 from table))))))
