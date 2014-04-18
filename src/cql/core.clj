@@ -72,7 +72,9 @@
 
 (defmacro select [& what]
 	(let [source (next (drop-while #(not= 'from %) what))
-		  table (first source)]
+		  table (first source)
+		  conditions (next (drop-while #(not= 'where %) what))]
 	`(let [sel# (selector ~@what)
-		   result# (map (partial extend-keys (keyword '~table)) ~table)]
-		(map sel# result#))))
+		   result# (map (partial extend-keys (keyword '~table)) ~table)
+		   where# (condition ~@conditions)]
+		(filter where# (map sel# result#)))))
