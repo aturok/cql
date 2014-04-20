@@ -63,7 +63,5 @@
 						`(map (partial extend-keys (keyword '~table)) ~table)
 						`(~(fnext source) ~table ~@(nnext source)))
 		  conditions (next (drop-while #(not= 'where %) what))]
-	`(let [sel# (selector ~@what)
-		   result# ~finalsource
-		   where# (condition ~@conditions)]
-		(map sel# (filter where# result#)))))
+	`(map (selector ~@what)
+		(filter (condition ~@conditions) ~finalsource))))
