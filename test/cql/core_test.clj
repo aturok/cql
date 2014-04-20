@@ -102,6 +102,14 @@
       (is (= false
             (less5 {:a 5})))
       (is (= false
+            (less5 {:a 6})))))
+  (testing "handles calculations"
+    (let [less5 (condition :a < (- 11 6))]
+      (is (= true
+            (less5 {:a 4})))
+      (is (= false
+            (less5 {:a 5})))
+      (is (= false
             (less5 {:a 6}))))))
 
 (deftest extend-keys-test
