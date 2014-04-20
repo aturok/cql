@@ -86,7 +86,23 @@
         (is (= true
                 (truth {:a 1 :b 1})))
         (is (= true
-                (truth {:a 2 :b 2 :c 2 :d 4}))))))
+                (truth {:a 2 :b 2 :c 2 :d 4})))))
+  (testing "handles numeric literals"
+    (let [less5 (condition :a < 5)]
+      (is (= true
+            (less5 {:a 4})))
+      (is (= false
+            (less5 {:a 5})))
+      (is (= false
+            (less5 {:a 6})))))
+  (testing "handles bound numeric literals"
+    (let [five 5 less5 (condition :a < five)]
+      (is (= true
+            (less5 {:a 4})))
+      (is (= false
+            (less5 {:a 5})))
+      (is (= false
+            (less5 {:a 6}))))))
 
 (deftest extend-keys-test
     (testing "extends dict keys with dict name"
