@@ -186,4 +186,15 @@
                   {:k 200 :v "second"}]]
             (is (= [{:t1.k1 1 :t1.k2 100 :t2.k 100 :t2.v "first"}
                     {:t1.k1 2 :t1.k2 200 :t2.k 200 :t2.v "second"}]
-                   (select * from t1 inner-join t2 on :t1.k2 = :t2.k))))))
+                   (select * from t1 inner-join t2 on :t1.k2 = :t2.k)))))
+    (testing "selects requested keys from 2 joined tables"
+        (let [t1 [{:k1 1 :k2 100}
+                  {:k1 2 :k2 200}]
+              t2 [{:k 100 :v "first"}
+                  {:k 200 :v "second"}]]
+            (is (= [{:t1.k1 1 :t2.v "first"}
+                    {:t1.k1 2 :t2.v "second"}]
+                   (select :t1.k1 :t2.v from t1 inner-join t2 on :t1.k2 = :t2.k)))
+            (is (= [{:t2.k 100}
+                    {:t2.k 200}]
+                   (select :t2.k from t1 inner-join t2 on :t1.k2 = :t2.k))))))
