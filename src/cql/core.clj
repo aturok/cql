@@ -56,10 +56,14 @@
 					(into {} (map (fn [k#] [k# (k# r#)]) ~ks))))))
 
 (defmacro select [& what]
-	(let [source (next (drop-while #(not= 'from %) what))
+	(let [source (take-while #(not= 'where %)
+					(next (drop-while #(not= 'from %) what)))
 		  table (first source)
+		  finalsource (if (nil? (next source))
+						`(map (partial extend-keys (keyword '~table)) ~table)
+						`(~(fnext source) ~table ~@(nnext source)))
 		  conditions (next (drop-while #(not= 'where %) what))]
 	`(let [sel# (selector ~@what)
-		   result# (map (partial extend-keys (keyword '~table)) ~table)
+		   result# ~finalsource
 		   where# (condition ~@conditions)]
 		(map sel# (filter where# result#)))))
