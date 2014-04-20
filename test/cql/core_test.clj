@@ -138,4 +138,17 @@
             (is (= [{:table.k1 2 :table.k2 2 :table.k3 600}]
                    (select * from table where :table.k1 = :table.k2)))
             (is (empty?
-                   (select * from table where :table.k1 > :table.k3))))))
+                   (select * from table where :table.k1 > :table.k3)))))
+    (testing "filters keyed results based on condition"
+        (let [table [{:k1 1 :k2 3 :k3 300}
+                     {:k1 2 :k2 2 :k3 600}
+                     {:k1 3 :k2 2 :k3 900}]]
+            (is (= [{:table.k1 1}
+                    {:table.k1 2}]
+                   (select :table.k1 from table where :table.k1 <= :table.k2)))
+            (is (= [{:table.k1 2 :table.k2 2}
+                    {:table.k1 3 :table.k2 2}]
+                   (select :table.k1 :table.k2
+                    from table
+                    where :table.k1 = :table.k2
+                      or  :table.k2 < :table.k1))))))

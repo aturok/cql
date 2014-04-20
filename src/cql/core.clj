@@ -77,4 +77,4 @@
 	`(let [sel# (selector ~@what)
 		   result# (map (partial extend-keys (keyword '~table)) ~table)
 		   where# (condition ~@conditions)]
-		(filter where# (map sel# result#)))))
+		(map sel# (filter where# result#)))))
