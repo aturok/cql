@@ -115,9 +115,12 @@
 (deftest extend-keys-test
     (testing "extends dict keys with dict name"
         (is (= {:t.a 1 :t.b 2}
-               (extend-keys :t {:a 1 :b 2})))))
+               (extend-keys :t {:a 1 :b 2}))))
+    (testing "works ok on empty dict"
+        (is (= {}
+               (extend-keys :t {})))))
 
-(deftest join-test
+(deftest inner-join-test
     (testing "simple condition with simple dicts"
         (let [a [{:k1 1} {:k1 2} {:k1 3}]
               b [{:k2 4} {:k2 1} {:k2 3}]]
