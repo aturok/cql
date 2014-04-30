@@ -47,13 +47,12 @@
 		   			combined#
 		   			nil)))))
 
-(defmacro selector [f & stuff]
-	(if (= f '*)
+(defmacro selector [& what]
+	(if (= (first what) '*)
 		identity
-		(let [otherkeys (take-while keyword? stuff)
-			  ks (set (conj otherkeys f))]
+		(let [fields (set (take-while keyword? what))]
 		  `(fn [r#]
-				(into {} (filter #(~ks (first %)) r#))))))
+				(into {} (filter #(~fields (first %)) r#))))))
 
 (defmacro select [& what]
 	(let [source (take-while #(not= 'where %)
