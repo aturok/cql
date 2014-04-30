@@ -51,9 +51,9 @@
 	(if (= f '*)
 		identity
 		(let [otherkeys (take-while keyword? stuff)
-			  ks (apply vector (conj otherkeys f))]
+			  ks (conj otherkeys f)]
 			  `(fn [r#]
-					(into {} (map (fn [k#] [k# (k# r#)]) ~ks))))))
+					(into {} (map (fn [k#] [k# (k# r#)]) '~ks))))))
 
 (defmacro select [& what]
 	(let [source (take-while #(not= 'where %)
