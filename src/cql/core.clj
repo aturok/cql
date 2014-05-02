@@ -10,9 +10,9 @@
 			`(~op
 				(condo ~t ~k1)
 				(condo ~t ~k2))
-			`(~op
-				(if (keyword? ~k1) (~k1 ~t) ~k1)
-				(if (keyword? ~k2) (~k2 ~t) ~k2))))
+			(let [v1 (if (keyword? k1) `(~k1 ~t) k1)
+				  v2 (if (keyword? k2) `(~k2 ~t) k2)]
+			`(~op ~v1 ~v2))))
 	([t k1 op1 k2 link & other]
 		(if (seq? k1)
 			`(~op1
