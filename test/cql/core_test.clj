@@ -4,31 +4,31 @@
 
 (deftest condition-test
   (testing "handles simple 2arg"
-    (let [aeqb (condition :a = :b)]
+    (let [aeqb (condfn :a = :b)]
     	(is (= true
     			(aeqb {:a 1 :b 1})))
     	(is (= false
     			(aeqb {:a 1 :b 2})))))
   (testing "handles simple 2arg with parenthesis"
-    (let [aeqb (condition (:a = :b))]
+    (let [aeqb (condfn (:a = :b))]
         (is (= true
                 (aeqb {:a 1 :b 1})))
         (is (= false
                 (aeqb {:a 1 :b 2})))))
-  (testing "handles simple condition with and"
-    (let [withand (condition :a = :b and :c = :d)]
+  (testing "handles simple condfn with and"
+    (let [withand (condfn :a = :b and :c = :d)]
     	(is (= true
     			(withand {:a 1 :b 1 :c 1 :d 1})))
     	(is (= false
     			(withand {:a 1 :b 1 :c 2 :d 1})))))
   (testing "handles obsolete paranthesis correctly"
-    (let [withand (condition (:a = :b) and (:c = :d))]
+    (let [withand (condfn (:a = :b) and (:c = :d))]
         (is (= true
                 (withand {:a 1 :b 1 :c 1 :d 1})))
         (is (= false
                 (withand {:a 1 :b 1 :c 2 :d 1})))))
-  (testing "handles condition with parenthesis"
-    (let [wparenthesis (condition (:c = :d or :b = :c))]
+  (testing "handles condfn with parenthesis"
+    (let [wparenthesis (condfn (:c = :d or :b = :c))]
     	(is (= true
     			(wparenthesis {:a 1 :b 1 :c 2 :d 2})))
     	(is (= true
@@ -37,8 +37,8 @@
     			(wparenthesis {:a 1 :b 1 :c 2 :d 3})))
     	(is (= false
     			(wparenthesis {:a 1 :b 0 :c 2 :d 0})))))
-  (testing "handles condition with prioritization"
-    (let [complex (condition :a = :b and (:c = :d or :b = :c))]
+  (testing "handles condfn with prioritization"
+    (let [complex (condfn :a = :b and (:c = :d or :b = :c))]
     	(is (= true
     			(complex {:a 1 :b 1 :c 2 :d 2})))
     	(is (= true
@@ -47,8 +47,8 @@
     			(complex {:a 1 :b 1 :c 2 :d 3})))
     	(is (= false
     			(complex {:a 1 :b 0 :c 0 :d 0})))))
-  (testing "handles condition with prioritization (inversed)"
-    (let [complex (condition (:c = :d or :b = :c) and :a = :b)]
+  (testing "handles condfn with prioritization (inversed)"
+    (let [complex (condfn (:c = :d or :b = :c) and :a = :b)]
         (is (= true
                 (complex {:a 1 :b 1 :c 2 :d 2})))
         (is (= true
@@ -57,8 +57,8 @@
                 (complex {:a 1 :b 1 :c 2 :d 3})))
         (is (= false
                 (complex {:a 1 :b 0 :c 0 :d 0})))))
-  (testing "handles condition with much prioritization"
-    (let [complex (condition (:c = :d or :b = :c) and (:a = :b or :a = :c))]
+  (testing "handles condfn with much prioritization"
+    (let [complex (condfn (:c = :d or :b = :c) and (:a = :b or :a = :c))]
         (is (= true
                 (complex {:a 1 :b 1 :c 2 :d 2})))
         (is (= true
@@ -68,7 +68,7 @@
         (is (= false
                 (complex {:a 1 :b 0 :c 0 :d 0})))))
   (testing "handles long and/or correctly"
-    (let [long (condition :c = :d or :b = :c and :a = :b or :a = :c)]
+    (let [long (condfn :c = :d or :b = :c and :a = :b or :a = :c)]
         (is (= true
                 (long {:a 1 :b 1 :c 2 :d 2})))
         (is (= true
@@ -79,8 +79,8 @@
                 (long {:a 1 :b 2 :c 3 :d 4})))
         (is (= false
                 (long {:a 1 :b 2 :c 3 :d 1})))))
-  (testing "creates always true condition for no args"
-    (let [truth (condition)]
+  (testing "creates always true condfn for no args"
+    (let [truth (condfn)]
         (is (= true
                 (truth {})))
         (is (= true
@@ -88,7 +88,7 @@
         (is (= true
                 (truth {:a 2 :b 2 :c 2 :d 4})))))
   (testing "handles numeric literals"
-    (let [less5 (condition :a < 5)]
+    (let [less5 (condfn :a < 5)]
       (is (= true
             (less5 {:a 4})))
       (is (= false
@@ -96,7 +96,7 @@
       (is (= false
             (less5 {:a 6})))))
   (testing "handles bound numeric literals"
-    (let [five 5 less5 (condition :a < five)]
+    (let [five 5 less5 (condfn :a < five)]
       (is (= true
             (less5 {:a 4})))
       (is (= false
@@ -104,7 +104,7 @@
       (is (= false
             (less5 {:a 6})))))
   (testing "handles calculations"
-    (let [less5 (condition :a < (- 11 6))]
+    (let [less5 (condfn :a < (- 11 6))]
       (is (= true
             (less5 {:a 4})))
       (is (= false
@@ -121,7 +121,7 @@
                (extend-keys :t {})))))
 
 (deftest inner-join-test
-    (testing "simple condition with simple dicts"
+    (testing "simple condfn with simple dicts"
         (let [a [{:k1 1} {:k1 2} {:k1 3}]
               b [{:k2 4} {:k2 1} {:k2 3}]]
             (is (= [{:a.k1 1 :b.k2 1}

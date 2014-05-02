@@ -1,31 +1,31 @@
 (ns cql.core)
 
-(defmacro condo
+(defmacro condition
 	([t]
 		`true)
 	([t complex]
-		`(condo ~t ~@complex))
+		`(condition ~t ~@complex))
 	([t k1 op k2]
 		(if (seq? k1)
 			`(~op
-				(condo ~t ~k1)
-				(condo ~t ~k2))
+				(condition ~t ~k1)
+				(condition ~t ~k2))
 			(let [v1 (if (keyword? k1) `(~k1 ~t) k1)
 				  v2 (if (keyword? k2) `(~k2 ~t) k2)]
 			`(~op ~v1 ~v2))))
 	([t k1 op1 k2 link & other]
 		(if (seq? k1)
 			`(~op1
-				(condo ~t ~k1)
-				(condo ~t ~k2 ~link ~@other))
+				(condition ~t ~k1)
+				(condition ~t ~k2 ~link ~@other))
 			`(~link
-				(condo ~t ~k1 ~op1 ~k2)
-				(condo ~t ~@other)))))
+				(condition ~t ~k1 ~op1 ~k2)
+				(condition ~t ~@other)))))
 
-(defmacro condition 
+(defmacro condfn
 	[& conditions]
 	`(fn [t#]
-		(condo t# ~@conditions)))
+		(condition t# ~@conditions)))
 
 (defn keystr [k]
 	(subs (str k) 1))
@@ -43,7 +43,7 @@
 		(for [r1# (map (partial extend-keys (keyword '~table1)) ~table1)
 		      r2# (map (partial extend-keys (keyword '~table2)) ~table2)]
 		   (let [combined# (into r1# r2#)]
-		   		(if (condo combined# ~@conditions)
+				(if (condition combined# ~@conditions)
 		   			combined#
 		   			nil)))))
 
@@ -63,4 +63,4 @@
 						`(~(fnext source) ~table ~@(nnext source)))
 		  conditions (next (drop-while #(not= 'where %) what))]
 	`(map (selector ~@what)
-		(filter #(condo % ~@conditions) ~finalsource))))
+		(filter #(condition % ~@conditions) ~finalsource))))
