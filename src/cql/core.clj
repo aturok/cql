@@ -63,4 +63,4 @@
 						`(~(fnext source) ~table ~@(nnext source)))
 		  conditions (next (drop-while #(not= 'where %) what))]
 	`(map (selector ~@what)
-		(filter (condition ~@conditions) ~finalsource))))
+		(filter #(condo % ~@conditions) ~finalsource))))
